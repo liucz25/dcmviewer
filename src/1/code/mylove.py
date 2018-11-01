@@ -1,3 +1,4 @@
+#must pip install numpy  also never use it
 import pygame
 
 pygame.init()
