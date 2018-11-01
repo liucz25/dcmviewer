@@ -1,0 +1,1183 @@
+
+    DICOMImageReader - Reads some DICOM images
+    
+    Superclass: ImageReader2
+    
+    DICOM (stands for Digital Imaging in COmmunications and Medicine) is
+    a medical image file format widely used to exchange data, provided by
+    various modalities.
+    @warning
+    This reader might eventually handle ACR-NEMA file (predecessor of the
+    DICOM format for medical images). This reader does not handle
+    encapsulated format, only plain raw file are handled. This reader
+    also does not handle multi-frames DICOM datasets.
+    @warning
+    Internally DICOMParser assumes the x,y pixel spacing is stored in
+    0028,0030 and that z spacing is stored in Slice Thickness (correct
+    only when slice were acquired contiguous): 0018,0050. Which means
+    this is only valid for some rare MR Image Storage
+    
+    @sa
+    BMPReader PNMReader TIFFReader
+    
+    
+Traits:
+-------------------
+
+
+directory_name: 
+        Set the directory name for the reader to look in for DICOM files.
+        If this method is used, the reader will try to find all the DICOM
+        files in a directory. It will select the subset corresponding to
+        the first series UID it stumbles across and it will try to build
+        an ordered volume from them based on the slice number. The volume
+        building will be upgraded to something more sophisticated in the
+        future.
+        
+file_name: 
+        Set the filename for the file to read. If this method is used,
+        the reader will only read a single file.
+        
+bits_allocated: 
+        Get the number of bits allocated for each pixel in the file.
+        
+gantry_angle: 
+        Get the gantry angle for the last image processed.
+        
+height: 
+        Returns the image height.
+        
+image_orientation_patient: 
+        Get the (DICOM) directions cosines. It consist of the components
+        of the first two vectors. The third vector needs to be computed
+        to form an orthonormal basis.
+        
+image_position_patient: 
+        Get the (DICOM) x,y,z coordinates of the first pixel in the image
+        (upper left hand corner) of the last image processed by the
+        DICOMParser
+        
+input: The first input of this object, i.e. the result of `get_input(0)`.
+number_of_components: 
+        Get the number of components of the image data for the last image
+        processed.
+        
+patient_name: 
+        Get the patient name for the last image processed.
+        
+pixel_representation: 
+        Get the pixel representation of the last image processed by the
+        DICOMParser. A zero is a unsigned quantity.  A one indicates a
+        signed quantity
+        
+pixel_spacing: 
+        Returns the pixel spacing (in X, Y, Z). Note: if there is only
+        one slice, the Z spacing is set to the slice thickness. If there
+        is more than one slice, it is set to the distance between the
+        first two slices.
+        
+rescale_offset: 
+        Get the rescale offset for the pixel data.
+        
+rescale_slope: 
+        Get the rescale slope for the pixel data.
+        
+study_id: 
+        Get the Study ID for the last image processed.
+        
+study_uid: 
+        Get the study uid for the last image processed.
+        
+transfer_syntax_uid: 
+        Get the transfer syntax UID for the last image processed.
+        
+width: 
+        Returns the image width.
+        
+file_lower_left: 
+        Set/Get whether the data comes from the file starting in the
+        lower left corner or upper left corner.
+        
+swap_bytes: 
+        Set/Get the byte swapping to explicitly swap the bytes of a file.
+        
+data_byte_order: 
+        These methods should be used instead of the swap_bytes methods.
+        They indicate the byte ordering of the file you are trying to
+        read in. These methods will then either swap or not swap the
+        bytes depending on the byte ordering of the machine it is being
+        run on. For example, reading in a big_endian file on a big_endian
+        machine will result in no swapping. Trying to read the same file
+        on a little_endian machine will result in swapping. As a quick
+        note most UNIX machines are big_endian while PC's and VAX tend to
+        be little_endian. So if the file you are reading in was generated
+        on a VAX or PC, set_data_byte_order_to_little_endian otherwise
+        set_data_byte_order_to_big_endian.
+        
+data_extent: 
+        
+        
+data_origin: 
+        
+        
+data_spacing: 
+        
+        
+file_dimensionality: 
+        The number of dimensions stored in a file. This defaults to two.
+        
+file_name_slice_offset: 
+        When reading files which start at an unusual index, this can be
+        added to the slice number when generating the file name (default
+        = 0)
+        
+file_name_slice_spacing: 
+        When reading files which have regular, but non contiguous slices
+        (eg filename.1,filename.3,filename.5) a spacing can be specified
+        to skip missing files (default = 1)
+        
+file_names: 
+        Specify a list of file names.  Each file must be a single slice,
+        and each slice must be of the same size. The files must be in the
+        correct order. Use set_file_name when reading a volume (multiple
+        slice), since data_extent will be modified after a set_file_names
+        call.
+        
+file_pattern: 
+        The sprintf-style format string used to build filename from
+        file_prefix and slice number.
+        
+file_prefix: 
+        Specify file prefix for the image file or files.  This can be
+        used in place of set_file_name or set_file_names if the filenames
+        follow a specific naming pattern, but you must explicitly set the
+        data_extent so that the reader will know what range of slices to
+        load.
+        
+header_size: 
+        If there is a tail on the file, you want to explicitly set the
+        header size.
+        
+memory_buffer: 
+        
+        
+memory_buffer_length: 
+        Specify the in memory image buffer length.
+        
+number_of_scalar_components: 
+        Set/Get the number of scalar components
+        
+data_increments: 
+        
+        
+descriptive_name: 
+        Return a descriptive name for the file format that might be
+        useful in a GUI.
+        
+file_extensions: 
+        Get the file extensions for this format. Returns a string with a
+        space separated list of extensions in the format .extension
+        
+internal_file_name: 
+        Set/Get the internal file name
+        
+output: Output of this source, i.e. the result of `get_output()`.
+abort_execute: 
+        Set/Get the abort_execute flag for the process object. Process
+        objects may handle premature termination of execution in
+        different ways.
+        
+release_data_flag: 
+        Turn release data flag on or off for all output ports.
+        
+executive: 
+        Get this algorithm's executive.  If it has none, a default
+        executive will be created.
+        
+information: 
+        Set/Get the information object associated with this algorithm.
+        
+input_connection: The first input connection for this object, i.e. the result of `get_input_connection(0, 0)`.
+progress: 
+        Set/Get the execution progress of a process object.
+        
+progress_observer: 
+        If an progress_observer is set, the algorithm will report progress
+        through it rather than directly. This means that it will call
+        update_progress() on the progress_observer rather than itself
+        report it and set progress. This is most useful in situations
+        where multiple threads are executing an algorithm at the same
+        time and want to handle progress locally.
+        
+progress_text: 
+        Set the current text message associated with the progress state.
+        This may be used by a calling process/GUI. Note: Because
+        set_progress_text() is called from inside request_data() it does not
+        modify the algorithm object. Algorithms are not allowed to modify
+        themselves from inside request_data().
+        
+error_code: 
+        The error code contains a possible error that occurred while
+        reading or writing the file.
+        
+input_algorithm: 
+        Returns the algorithm and the output port index of that algorithm
+        connected to a port-index pair.
+        
+input_executive: 
+        Returns the executive associated with a particular input
+        connection.
+        
+input_information: 
+        Return the information object that is associated with a
+        particular input connection. This can be used to get meta-data
+        coming from the REQUEST_INFORMATION pass and set requests for the
+        REQUEST_UPDATE_EXTENT pass. NOTE: Do not use this in any of the
+        pipeline passes. Use the information objects passed as arguments
+        instead.
+        
+number_of_input_ports: 
+        Get the number of input ports used by the algorithm.
+        
+number_of_output_ports: 
+        Get the number of output ports provided by the algorithm.
+        
+output_port: 
+        Get a proxy object corresponding to the given output port of this
+        algorithm.  The proxy object can be passed to another algorithm's
+        set_input_connection(), add_input_connection(), and
+        remove_input_connection() methods to modify pipeline connectivity.
+        
+total_number_of_input_connections: 
+        Get the total number of inputs for this algorithm
+        
+update_ghost_level: 
+        These functions return the update extent for output ports that
+        use piece extents. Where port is not specified, it is assumed to
+        be 0.
+        
+update_number_of_pieces: 
+        These functions return the update extent for output ports that
+        use piece extents. Where port is not specified, it is assumed to
+        be 0.
+        
+debug: 
+        Set the value of the debug flag. A true value turns debugging on.
+        
+global_warning_display: 
+        This is a global flag that controls whether any debug, warning or
+        error messages are displayed.
+        
+m_time: 
+        Return this object's modified time.
+        
+reference_count: 
+        Sets the reference count. (This is very dangerous, use with
+        care.)
+        
+class_name: 
+        Return the class name as a string.
+        
+Methods:
+----------------------
+
+
+CAN_HANDLE_PIECE_REQUEST(self)
+
+V.can__handle__piece__request() -> InformationIntegerKey
+C++: static InformationIntegerKey *CAN_HANDLE_PIECE_REQUEST()
+Key that tells the pipeline that a particular algorithm can or
+cannot handle piece request. If a filter cannot handle piece
+requests and is asked for a piece, the executive will flag an
+error. If a structured data source cannot handle piece requests
+but can produce sub-extents (CAN_PRODUCE_SUB_EXTENT), the
+executive will use an extent translator to split the extent into
+pieces. Otherwise, if a source cannot handle piece requests, the
+executive will ask for the whole data for piece 0 and not execute
+the source for other pieces.\ingroup information_keys
+
+
+CAN_PRODUCE_SUB_EXTENT(self)
+
+V.can__produce__sub__extent() -> InformationIntegerKey
+C++: static InformationIntegerKey *CAN_PRODUCE_SUB_EXTENT()
+This key tells the executive that a particular output port is
+capable of producing an arbitrary subextent of the whole extent.
+Many image sources and readers fall into this category but some
+such as the legacy structured data readers cannot support this
+feature.\ingroup information_keys
+
+
+INPUT_ARRAYS_TO_PROCESS(self)
+
+V.input__arrays__to__process() -> InformationInformationVectorKey
+C++: static InformationInformationVectorKey *INPUT_ARRAYS_TO_PROCESS(
+    )
+\ingroup information_keys
+
+
+INPUT_CONNECTION(self)
+
+V.input__connection() -> InformationIntegerKey
+C++: static InformationIntegerKey *INPUT_CONNECTION()
+\ingroup information_keys
+
+
+INPUT_IS_OPTIONAL(self)
+
+V.input__is__optional() -> InformationIntegerKey
+C++: static InformationIntegerKey *INPUT_IS_OPTIONAL()
+Keys used to specify input port requirements.\ingroup
+information_keys
+
+
+INPUT_IS_REPEATABLE(self)
+
+V.input__is__repeatable() -> InformationIntegerKey
+C++: static InformationIntegerKey *INPUT_IS_REPEATABLE()
+\ingroup information_keys
+
+
+INPUT_PORT(self)
+
+V.input__port() -> InformationIntegerKey
+C++: static InformationIntegerKey *INPUT_PORT()
+\ingroup information_keys
+
+
+INPUT_REQUIRED_DATA_TYPE(self)
+
+V.input__required__data__type() -> InformationStringVectorKey
+C++: static InformationStringVectorKey *INPUT_REQUIRED_DATA_TYPE(
+    )
+\ingroup information_keys
+
+
+INPUT_REQUIRED_FIELDS(self)
+
+V.input__required__fields() -> InformationInformationVectorKey
+C++: static InformationInformationVectorKey *INPUT_REQUIRED_FIELDS(
+    )
+\ingroup information_keys
+
+
+add_input_connection(self, *args)
+
+V.add_input_connection(int, AlgorithmOutput)
+C++: virtual void AddInputConnection(int port,
+    AlgorithmOutput *input)
+V.add_input_connection(AlgorithmOutput)
+C++: virtual void AddInputConnection(AlgorithmOutput *input)
+Add a connection to the given input port index.  See
+set_input_connection() for details on input connections.  This
+method is the complement to remove_input_connection() in that it
+adds only the connection specified without affecting other
+connections.  Typical usage is
+
+* filter_2->_add_input_connection(_0, filter_1->_get_output_port(_0)).
+
+
+add_input_data(self, *args)
+
+V.add_input_data(DataObject)
+C++: virtual void AddInputData(DataObject *)
+V.add_input_data(int, DataObject)
+C++: virtual void AddInputData(int, DataObject *)
+Assign a data object as input. Note that this method does not
+establish a pipeline connection. Use set_input_connection to setup
+a pipeline connection.
+
+
+add_input_data_object(self, *args)
+
+V.add_input_data_object(int, DataObject)
+C++: virtual void AddInputDataObject(int port,
+    DataObject *data)
+V.add_input_data_object(DataObject)
+C++: virtual void AddInputDataObject(DataObject *data)
+Add the data-object as an input to this given port. This will add
+a new input connection on the specified port without affecting
+any existing connections on the same input port.
+
+
+add_observer(self, *args)
+
+V.add_observer(int, function) -> int
+C++: unsigned long AddObserver(const char *event,
+    Command *command, float priority=0.0f)
+Add an event callback function(vtk_object, int) for an event type.
+Returns a handle that can be used with remove_event(int).
+
+
+break_on_error(self)
+
+V.break_on_error()
+C++: static void BreakOnError()
+This method is called when ErrorMacro executes. It allows the
+debugger to break on error.
+
+
+can_read_file(self, *args)
+
+V.can_read_file(string) -> int
+C++: virtual int CanReadFile(const char *fname)
+Return non zero if the reader can read the given file name.
+Should be implemented by all sub-classes of ImageReader2. For
+non zero return values the following values are to be used 1 - I
+think I can read the file but I cannot prove it 2 - I definitely
+can read the file 3 - I can read the file and I have validated
+that I am the correct reader for this file
+
+
+compute_internal_file_name(self, *args)
+
+V.compute_internal_file_name(int)
+C++: virtual void ComputeInternalFileName(int slice)
+Set/Get the internal file name
+
+
+convert_total_input_to_port_connection(self, *args)
+
+V.convert_total_input_to_port_connection(int, int, int)
+C++: void ConvertTotalInputToPortConnection(int ind, int &port,
+    int &conn)
+Convenience routine to convert from a linear ordering of input
+connections to a port/connection pair.
+
+
+fast_delete(self)
+
+V.fast_delete()
+C++: virtual void FastDelete()
+Delete a reference to this object.  This version will not invoke
+garbage collection and can potentially leak the object if it is
+part of a reference loop.  Use this method only when it is known
+that the object has another reference and would not be collected
+if a full garbage collection check were done.
+
+
+get(*args, **kw)
+
+Shortcut for getting object trait attributes.
+
+Parameters
+----------
+names : list of strings
+    A list of trait attribute names whose values are requested.
+
+Returns
+-------
+result : dict
+    A dictionary whose keys are the names passed as arguments and whose
+    values are the corresponding trait values.
+
+Description
+-----------
+Looks up the value of each trait whose name is passed as an argument
+and returns a dictionary containing the resulting name/value pairs.
+If any name does not correspond to a defined trait, it is not included
+in the result.
+
+If no names are specified, the result is a dictionary containing
+name/value pairs for *all* traits defined on the object.
+
+
+get_address_as_string(self, *args)
+
+V.get_address_as_string(string) -> string
+C++: const char *GetAddressAsString()
+Get address of C++ object in format 'Addr=%p' after casting to
+the specified type.  You can get the same information from o.__this__.
+
+
+get_command(self, *args)
+
+V.get_command(int) -> Command
+C++: Command *GetCommand(unsigned long tag)
+Allow people to add/remove/invoke observers (callbacks) to any
+VTK object.  This is an implementation of the subject/observer
+design pattern. An observer is added by specifying an event to
+respond to and a Command to execute. It returns an unsigned
+long tag which can be used later to remove the event or retrieve
+the command. When events are invoked, the observers are called in
+the order they were added. If a priority value is specified, then
+the higher priority commands are called first. A command may set
+an abort flag to stop processing of the event. (See Command.h
+for more information.)
+
+
+get_data_scalar_type(self)
+
+V.get_data_scalar_type() -> int
+C++: int GetDataScalarType()
+Get the file format.  Pixels are this type in the file.
+
+
+get_image_data_input(self, *args)
+
+V.get_image_data_input(int) -> ImageData
+C++: ImageData *GetImageDataInput(int port)
+Get a data object for one of the input port connections.  The use
+of this method is strongly discouraged, but some filters that
+were written a long time ago still use this method.
+
+
+get_input(self, *args)
+
+V.get_input(int) -> DataObject
+C++: DataObject *GetInput(int port)
+V.get_input() -> DataObject
+C++: DataObject *GetInput()
+Get a data object for one of the input port connections.  The use
+of this method is strongly discouraged, but some filters that
+were written a long time ago still use this method.
+
+
+get_input_array_information(self, *args)
+
+V.get_input_array_information(int) -> Information
+C++: Information *GetInputArrayInformation(int idx)
+Get the info object for the specified input array to this
+algorithm
+
+
+get_input_connection(self, *args)
+
+V.get_input_connection(int, int) -> AlgorithmOutput
+C++: AlgorithmOutput *GetInputConnection(int port, int index)
+Get the algorithm output port connected to an input port.
+
+
+get_input_data_object(self, *args)
+
+V.get_input_data_object(int, int) -> DataObject
+C++: DataObject *GetInputDataObject(int port, int connection)
+Get the data object that will contain the algorithm input for the
+given port and given connection.
+
+
+get_input_port_information(self, *args)
+
+V.get_input_port_information(int) -> Information
+C++: Information *GetInputPortInformation(int port)
+Get the information object associated with an input port.  There
+is one input port per kind of input to the algorithm.  Each input
+port tells executives what kind of data and downstream requests
+this algorithm can handle for that input.
+
+
+get_number_of_input_connections(self, *args)
+
+V.get_number_of_input_connections(int) -> int
+C++: int GetNumberOfInputConnections(int port)
+Get the number of inputs currently connected to a port.
+
+
+get_output(self, idx=None)
+
+V.get_output() -> ImageData
+C++: ImageData *GetOutput()
+V.get_output(int) -> ImageData
+C++: ImageData *GetOutput(int)
+Get the output data object for a port on this algorithm.
+
+
+get_output_data_object(self, *args)
+
+V.get_output_data_object(int) -> DataObject
+C++: DataObject *GetOutputDataObject(int port)
+Get the data object that will contain the algorithm output for
+the given port.
+
+
+get_output_information(self, *args)
+
+V.get_output_information(int) -> Information
+C++: Information *GetOutputInformation(int port)
+Return the information object that is associated with a
+particular output port. This can be used to set meta-data coming
+during the REQUEST_INFORMATION. NOTE: Do not use this in any of
+the pipeline passes. Use the information objects passed as
+arguments instead.
+
+
+get_output_port_information(self, *args)
+
+V.get_output_port_information(int) -> Information
+C++: Information *GetOutputPortInformation(int port)
+Get the information object associated with an output port.  There
+is one output port per output from the algorithm.  Each output
+port tells executives what kind of upstream requests this
+algorithm can handle for that output.
+
+
+get_update_extent(self, *args)
+
+V.get_update_extent() -> (int, int, int, int, int, int)
+C++: int *GetUpdateExtent()
+V.get_update_extent(int) -> (int, int, int, int, int, int)
+C++: int *GetUpdateExtent(int port)
+V.get_update_extent(int, int, int, int, int, int)
+C++: void GetUpdateExtent(int &x0, int &x1, int &y0, int &y1,
+    int &z0, int &z1)
+V.get_update_extent(int, int, int, int, int, int, int)
+C++: void GetUpdateExtent(int port, int &x0, int &x1, int &y0,
+    int &y1, int &z0, int &z1)
+V.get_update_extent([int, int, int, int, int, int])
+C++: void GetUpdateExtent(int extent[6])
+V.get_update_extent(int, [int, int, int, int, int, int])
+C++: void GetUpdateExtent(int port, int extent[6])
+These functions return the update extent for output ports that
+use 3d extents. Where port is not specified, it is assumed to be
+0.
+
+
+has_executive(self)
+
+V.has_executive() -> int
+C++: int HasExecutive()
+Check whether this algorithm has an assigned executive.  This
+will NOT create a default executive.
+
+
+has_observer(self, *args)
+
+V.has_observer(int, Command) -> int
+C++: int HasObserver(unsigned long event, Command *)
+V.has_observer(string, Command) -> int
+C++: int HasObserver(const char *event, Command *)
+V.has_observer(int) -> int
+C++: int HasObserver(unsigned long event)
+V.has_observer(string) -> int
+C++: int HasObserver(const char *event)
+Allow people to add/remove/invoke observers (callbacks) to any
+VTK object.  This is an implementation of the subject/observer
+design pattern. An observer is added by specifying an event to
+respond to and a Command to execute. It returns an unsigned
+long tag which can be used later to remove the event or retrieve
+the command. When events are invoked, the observers are called in
+the order they were added. If a priority value is specified, then
+the higher priority commands are called first. A command may set
+an abort flag to stop processing of the event. (See Command.h
+for more information.)
+
+
+initialize_object_base(self)
+
+V.initialize_object_base()
+C++: void InitializeObjectBase()
+
+
+invoke_event(self, *args)
+
+V.invoke_event(int, void) -> int
+C++: int InvokeEvent(unsigned long event, void *callData)
+V.invoke_event(string, void) -> int
+C++: int InvokeEvent(const char *event, void *callData)
+V.invoke_event(int) -> int
+C++: int InvokeEvent(unsigned long event)
+V.invoke_event(string) -> int
+C++: int InvokeEvent(const char *event)
+This method invokes an event and return whether the event was
+aborted or not. If the event was aborted, the return value is 1,
+otherwise it is 0.
+
+
+is_a(self, *args)
+
+V.is_a(string) -> int
+C++: virtual TypeBool IsA(const char *name)
+Return 1 if this class is the same type of (or a subclass of) the
+named class. Returns 0 otherwise. This method works in
+combination with TypeMacro found in SetGet.h.
+
+
+is_type_of(self, *args)
+
+V.is_type_of(string) -> int
+C++: static TypeBool IsTypeOf(const char *name)
+Return 1 if this class type is the same type of (or a subclass
+of) the named class. Returns 0 otherwise. This method works in
+combination with TypeMacro found in SetGet.h.
+
+
+modified(self)
+
+V.modified()
+C++: virtual void Modified()
+Update the modification time for this object. Many filters rely
+on the modification time to determine if they need to recompute
+their data. The modification time is a unique monotonically
+increasing unsigned long integer.
+
+
+modify_request(self, *args)
+
+V.modify_request(Information, int) -> int
+C++: virtual int ModifyRequest(Information *request, int when)
+This method gives the algorithm a chance to modify the contents
+of a request before or after (specified in the when argument) it
+is forwarded. The default implementation is empty. Returns 1 on
+success, 0 on failure. When can be either
+Executive::BeforeForward or Executive::AfterForward.
+
+
+new_instance(self)
+
+V.new_instance() -> Object
+C++: Object *NewInstance()
+
+
+open_file(self)
+
+V.open_file() -> int
+C++: virtual int OpenFile()
+
+
+process_request(self, *args)
+
+V.process_request(Information, Collection,
+    InformationVector) -> int
+C++: int ProcessRequest(Information *request,
+    Collection *inInfo, InformationVector *outInfo)
+Version of process_request() that is wrapped. This converts the
+collection to an array and calls the other version.
+
+
+propagate_update_extent(self)
+
+V.propagate_update_extent()
+C++: virtual void PropagateUpdateExtent()
+Propagate meta-data upstream.
+
+
+register(self, *args)
+
+V.register(ObjectBase)
+C++: virtual void Register(ObjectBase *o)
+Increase the reference count by 1.
+
+
+remove_all_input_connections(self, *args)
+
+V.remove_all_input_connections(int)
+C++: virtual void RemoveAllInputConnections(int port)
+Removes all input connections.
+
+
+remove_all_inputs(self)
+
+V.remove_all_inputs()
+C++: void RemoveAllInputs()
+Remove all the input data.
+
+
+remove_all_observers(self)
+
+V.remove_all_observers()
+C++: void RemoveAllObservers()
+
+
+remove_input_connection(self, *args)
+
+V.remove_input_connection(int, AlgorithmOutput)
+C++: virtual void RemoveInputConnection(int port,
+    AlgorithmOutput *input)
+V.remove_input_connection(int, int)
+C++: virtual void RemoveInputConnection(int port, int idx)
+Remove a connection from the given input port index.  See
+set_input_connection() for details on input connection.  This
+method is the complement to add_input_connection() in that it
+removes only the connection specified without affecting other
+connections.  Typical usage is
+
+* filter_2->_remove_input_connection(_0, filter_1->_get_output_port(_0)).
+
+
+remove_observer(self, *args)
+
+V.remove_observer(Command)
+C++: void RemoveObserver(Command *)
+V.remove_observer(int)
+C++: void RemoveObserver(unsigned long tag)
+Allow people to add/remove/invoke observers (callbacks) to any
+VTK object.  This is an implementation of the subject/observer
+design pattern. An observer is added by specifying an event to
+respond to and a Command to execute. It returns an unsigned
+long tag which can be used later to remove the event or retrieve
+the command. When events are invoked, the observers are called in
+the order they were added. If a priority value is specified, then
+the higher priority commands are called first. A command may set
+an abort flag to stop processing of the event. (See Command.h
+for more information.)
+
+
+remove_observers(self, *args)
+
+V.remove_observers(int, Command)
+C++: void RemoveObservers(unsigned long event, Command *)
+V.remove_observers(string, Command)
+C++: void RemoveObservers(const char *event, Command *)
+V.remove_observers(int)
+C++: void RemoveObservers(unsigned long event)
+V.remove_observers(string)
+C++: void RemoveObservers(const char *event)
+Allow people to add/remove/invoke observers (callbacks) to any
+VTK object.  This is an implementation of the subject/observer
+design pattern. An observer is added by specifying an event to
+respond to and a Command to execute. It returns an unsigned
+long tag which can be used later to remove the event or retrieve
+the command. When events are invoked, the observers are called in
+the order they were added. If a priority value is specified, then
+the higher priority commands are called first. A command may set
+an abort flag to stop processing of the event. (See Command.h
+for more information.)
+
+
+safe_down_cast(self, *args)
+
+V.safe_down_cast(ObjectBase) -> Object
+C++: static Object *SafeDownCast(ObjectBase *o)
+
+
+seek_file(self, *args)
+
+V.seek_file(int, int, int)
+C++: virtual void SeekFile(int i, int j, int k)
+
+
+set(*args, **kw)
+
+Shortcut for setting object trait attributes.
+
+Parameters
+----------
+trait_change_notify : bool
+    If **True** (the default), then each value assigned may generate a
+    trait change notification. If **False**, then no trait change
+    notifications will be generated. (see also: trait_setq)
+**traits :
+    Key/value pairs, the trait attributes and their values to be
+    set
+
+Returns
+-------
+self :
+    The method returns this object, after setting attributes.
+
+Description
+-----------
+Treats each keyword argument to the method as the name of a trait
+attribute and sets the corresponding trait attribute to the value
+specified. This is a useful shorthand when a number of trait attributes
+need to be set on an object, or a trait attribute value needs to be set
+in a lambda function. For example, you can write::
+
+    person.trait_set(name='Bill', age=27)
+
+instead of::
+
+    person.name = 'Bill'
+    person.age = 27
+
+
+set_data_scalar_type(self, *args)
+
+V.set_data_scalar_type(int)
+C++: virtual void SetDataScalarType(int type)
+Set the data type of pixels in the file. If you want the output
+scalar type to have a different value, set it after this method
+is called.
+
+
+set_data_scalar_type_to_char(self)
+
+V.set_data_scalar_type_to_char()
+C++: virtual void SetDataScalarTypeToChar()
+
+
+set_data_scalar_type_to_double(self)
+
+V.set_data_scalar_type_to_double()
+C++: virtual void SetDataScalarTypeToDouble()
+
+
+set_data_scalar_type_to_float(self)
+
+V.set_data_scalar_type_to_float()
+C++: virtual void SetDataScalarTypeToFloat()
+
+
+set_data_scalar_type_to_int(self)
+
+V.set_data_scalar_type_to_int()
+C++: virtual void SetDataScalarTypeToInt()
+
+
+set_data_scalar_type_to_short(self)
+
+V.set_data_scalar_type_to_short()
+C++: virtual void SetDataScalarTypeToShort()
+
+
+set_data_scalar_type_to_signed_char(self)
+
+V.set_data_scalar_type_to_signed_char()
+C++: virtual void SetDataScalarTypeToSignedChar()
+
+
+set_data_scalar_type_to_unsigned_char(self)
+
+V.set_data_scalar_type_to_unsigned_char()
+C++: virtual void SetDataScalarTypeToUnsignedChar()
+
+
+set_data_scalar_type_to_unsigned_int(self)
+
+V.set_data_scalar_type_to_unsigned_int()
+C++: virtual void SetDataScalarTypeToUnsignedInt()
+
+
+set_data_scalar_type_to_unsigned_short(self)
+
+V.set_data_scalar_type_to_unsigned_short()
+C++: virtual void SetDataScalarTypeToUnsignedShort()
+
+
+set_default_executive_prototype(self, *args)
+
+V.set_default_executive_prototype(Executive)
+C++: static void SetDefaultExecutivePrototype(Executive *proto)
+If the default_executive_prototype is set, a copy of it is created
+in create_default_executive() using new_instance().
+
+
+set_input_array_to_process(self, *args)
+
+V.set_input_array_to_process(int, int, int, int, string)
+C++: virtual void SetInputArrayToProcess(int idx, int port,
+    int connection, int fieldAssociation, const char *name)
+V.set_input_array_to_process(int, int, int, int, int)
+C++: virtual void SetInputArrayToProcess(int idx, int port,
+    int connection, int fieldAssociation, int fieldAttributeType)
+V.set_input_array_to_process(int, Information)
+C++: virtual void SetInputArrayToProcess(int idx,
+    Information *info)
+V.set_input_array_to_process(int, int, int, string, string)
+C++: virtual void SetInputArrayToProcess(int idx, int port,
+    int connection, const char *fieldAssociation,
+    const char *attributeTypeorName)
+Set the input data arrays that this algorithm will process.
+Specifically the idx array that this algorithm will process
+(starting from 0) is the array on port, connection with the
+specified association and name or attribute type (such as
+SCALARS). The field_association refers to which field in the data
+object the array is stored. See DataObject::FieldAssociations
+for detail.
+
+
+set_input_connection(self, *args)
+
+V.set_input_connection(int, AlgorithmOutput)
+C++: virtual void SetInputConnection(int port,
+    AlgorithmOutput *input)
+V.set_input_connection(AlgorithmOutput)
+C++: virtual void SetInputConnection(AlgorithmOutput *input)
+Set the connection for the given input port index.  Each input
+port of a filter has a specific purpose.  A port may have zero or
+more connections and the required number is specified by each
+filter.  Setting the connection with this method removes all
+other connections from the port.  To add more than one connection
+use add_input_connection().
+
+* The input for the connection is the output port of another
+* filter, which is obtained with get_output_port().  Typical usage
+  is
+
+* filter_2->_set_input_connection(_0, filter_1->_get_output_port(_0)).
+
+
+set_input_data(self, *args)
+
+V.set_input_data(DataObject)
+C++: void SetInputData(DataObject *)
+V.set_input_data(int, DataObject)
+C++: void SetInputData(int, DataObject *)
+Assign a data object as input. Note that this method does not
+establish a pipeline connection. Use set_input_connection to setup
+a pipeline connection.
+
+
+set_input_data_object(self, *args)
+
+V.set_input_data_object(int, DataObject)
+C++: virtual void SetInputDataObject(int port,
+    DataObject *data)
+V.set_input_data_object(DataObject)
+C++: virtual void SetInputDataObject(DataObject *data)
+Sets the data-object as an input on the given port index. Setting
+the input with this method removes all other connections from the
+port. Internally, this method creates a TrivialProducer
+instance and sets that as the input-connection for the given
+port. It is safe to call this method repeatedly with the same
+input data object. The MTime of the Algorithm will not change
+unless the data object changed.
+
+
+set_output(self, obj)
+
+V.set_output(DataObject)
+C++: virtual void SetOutput(DataObject *d)
+Get the output data object for a port on this algorithm.
+
+
+set_update_extent(self, *args)
+
+V.set_update_extent(int, int, int, int)
+C++: void SetUpdateExtent(int port, int piece, int numPieces,
+    int ghostLevel)
+V.set_update_extent(int, int, int)
+C++: void SetUpdateExtent(int piece, int numPieces,
+    int ghostLevel)
+V.set_update_extent(int, [int, int, int, int, int, int])
+C++: void SetUpdateExtent(int port, int extent[6])
+V.set_update_extent([int, int, int, int, int, int])
+C++: void SetUpdateExtent(int extent[6])
+Set the output update extent in terms of piece and ghost levels.
+
+
+set_update_extent_to_whole_extent(self, *args)
+
+V.set_update_extent_to_whole_extent(int) -> int
+C++: int SetUpdateExtentToWholeExtent(int port)
+V.set_update_extent_to_whole_extent() -> int
+C++: int SetUpdateExtentToWholeExtent()
+If the whole output extent is required, this method can be called
+to set the output update extent to the whole extent. This method
+assumes that the whole extent is known (that update_information
+has been called).
+
+
+setup_observers(self)
+
+Add an observer for the ModifiedEvent so the traits are kept
+up-to-date with the wrapped VTK object and do it in a way that
+avoids reference cycles.
+
+
+teardown_observers(self)
+
+Remove the observer for the Modified event.
+
+
+un_register(self, *args)
+
+V.un_register(ObjectBase)
+C++: virtual void UnRegister(ObjectBase *o)
+Decrease the reference count (release by another object). This
+has the same effect as invoking Delete() (i.e., it reduces the
+reference count by 1).
+
+
+update(self, *args)
+
+V.update(int)
+C++: virtual void Update(int port)
+V.update()
+C++: virtual void Update()
+V.update(int, InformationVector) -> int
+C++: virtual int Update(int port, InformationVector *requests)
+V.update(Information) -> int
+C++: virtual int Update(Information *requests)
+Bring this algorithm's outputs up-to-date.
+
+
+update_data_object(self)
+
+V.update_data_object()
+C++: virtual void UpdateDataObject()
+Create output object(s).
+
+
+update_extent(self, *args)
+
+V.update_extent((int, int, int, int, int, int)) -> int
+C++: virtual int UpdateExtent(const int extents[6])
+Convenience method to update an algorithm after passing requests
+to its first output port. Supports extent request.
+
+
+update_extent_is_empty(self, *args)
+
+V.update_extent_is_empty(Information, DataObject) -> int
+C++: int UpdateExtentIsEmpty(Information *pinfo,
+    DataObject *output)
+V.update_extent_is_empty(Information, int) -> int
+C++: int UpdateExtentIsEmpty(Information *pinfo,
+    int extentType)
+This detects when the update_extent will generate no data This
+condition is satisfied when the update_extent has zero volume
+(0,-1,...) or the update_number_of_pieces is 0. The source uses this
+call to determine whether to call Execute.
+
+
+update_information(self)
+
+V.update_information()
+C++: virtual void UpdateInformation()
+Bring the algorithm's information up-to-date.
+
+
+update_piece(self, *args)
+
+V.update_piece(int, int, int, (int, int, int, int, int, int))
+    -> int
+C++: virtual int UpdatePiece(int piece, int numPieces,
+    int ghostLevels, const int extents[6]=0)
+Convenience method to update an algorithm after passing requests
+to its first output port. See documentation for Update(int port,
+InformationVector* requests) for details. Supports piece and
+extent (optional) requests.
+
+
+update_progress(self, *args)
+
+V.update_progress(float)
+C++: void UpdateProgress(double amount)
+Update the progress of the process object. If a progress_method
+exists, executes it.  Then set the Progress ivar to amount. The
+parameter amount should range between (0,1).
+
+
+update_time_step(self, *args)
+
+V.update_time_step(float, int, int, int, (int, int, int, int, int,
+    int)) -> int
+C++: virtual int UpdateTimeStep(double time, int piece=-1,
+    int numPieces=1, int ghostLevels=0, const int extents[6]=0)
+Convenience method to update an algorithm after passing requests
+to its first output port. See documentation for Update(int port,
+InformationVector* requests) for details. Supports time, piece
+(optional) and extent (optional) requests.
+
+
+update_traits(self, obj=None, event=None)
+
+Updates all the 'updateable' traits of the object.
+
+The method works by getting the current value from the wrapped
+VTK object.  `self._updateable_traits_` stores a tuple of
+tuples containing the trait name followed by the name of the
+get method to use on the wrapped VTK object.
+
+The `obj` and `event` parameters may be ignored and are not
+used in the function.  They exist only for compatibility with
+the VTK observer callback functions.
+
+
+update_whole_extent(self)
+
+V.update_whole_extent()
+C++: virtual void UpdateWholeExtent()
+Bring this algorithm's outputs up-to-date.
+
